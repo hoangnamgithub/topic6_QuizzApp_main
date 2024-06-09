@@ -3,7 +3,7 @@
 #  Class: 738657 - MI3310
 #  Project: Final Project - Topic 6
 
-#  This is main branch
+#  This is not main branch
 import sys, pickle, random, pyodbc
 from questionBank_src import createDatabase, createTables
 from examAdmin_src import ExamAdmin
