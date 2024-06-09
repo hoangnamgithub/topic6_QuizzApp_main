@@ -60,7 +60,7 @@
      <string notr="true">background-color: rgb(194, 248, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="playTab">
      <property name="sizePolicy">
@@ -1860,6 +1860,222 @@ border: 2px solid rgb(0, 0, 0);</string>
         <string>X</string>
        </property>
       </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>- R E S U L T -</string>
+     </attribute>
+     <widget class="QListWidget" name="listWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>181</width>
+        <height>511</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Open Sans Condensed ExtraBold</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(248, 247, 255);
+border: 3px solid rgb(255, 255, 255);
+border-radius: 10px
+
+
+
+</string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <item>
+       <property name="text">
+        <string>TEST 1</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="welcomelabel_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>961</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Open Sans Condensed ExtraBold</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(230, 57, 70);
+border: 3px solid rgb(0, 0, 0);
+border-radius: 10px;</string>
+      </property>
+      <property name="text">
+       <string>- TOPIC 6 - 20227247 - NGUYEN HOANG NAM -</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="tableWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>70</y>
+        <width>761</width>
+        <height>571</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(248, 247, 255);
+border: 3px solid rgb(255, 255, 255);
+border-radius: 10px
+
+
+
+</string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::SelectedClicked</set>
+      </property>
+      <column>
+       <property name="text">
+        <string>QID</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Correct Ans</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Your Ans</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Question</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Answer A</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Answer B</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Answer C</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Answer D</string>
+       </property>
+       <property name="font">
+        <font>
+         <family>Open Sans Condensed ExtraBold</family>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="welcomelabel_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>181</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Open Sans Condensed ExtraBold</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(230, 57, 70);
+border: 3px solid rgb(0, 0, 0);
+border-radius: 10px;</string>
+      </property>
+      <property name="text">
+       <string>- T E S T   N O. -</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </widget>
    </widget>
