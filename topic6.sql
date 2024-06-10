@@ -9,17 +9,21 @@ SELECT @@VERSION
 -- Describe table
 EXEC sp_help 'questions'
 EXEC sp_help 'userResult'
+EXEC sp_help 'resultsDetail'
 SELECT * FROM questions
 SELECT * FROM userResult
+SELECT * FROM resultsDetail
 
 -- Drop everything
 DROP DATABASE QuestionBank
 DROP TABLE questions
 DROP TABLE userResult
+DROP TABLE resultsDetail
 
 -- Delete data
 DELETE FROM questions
 DELETE FROM userResult
+DELETE FROM resultsDetail
 
 -- Data for fast insertion
 INSERT INTO questions (quesID, Question, AnswerA, AnswerB, AnswerC, AnswerD, CorrectAnswer) VALUES

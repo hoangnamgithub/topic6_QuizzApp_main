@@ -18,6 +18,7 @@ class ExamAdmin:
         self.timer.timeout.connect(self.checkTimeLeft)
 
     def startQuiz(self):
+        cleanUpResultsDetail()
         self.scoreTrack = 0
         self.quesCount = 1
         numOfQues = self.ui.numofQuesInputbox.text().strip()
@@ -48,10 +49,11 @@ class ExamAdmin:
                     self.ui.ansAlabel, self.ui.ansBlabel, self.ui.ansClabel, self.ui.ansDlabel)
 
         # Enable the answer buttons
-        self.ui.ansApushButton.setDisabled(False)
-        self.ui.ansBpushButton.setDisabled(False)
-        self.ui.ansCpushButton.setDisabled(False)
-        self.ui.ansDpushButton.setDisabled(False)
+        # self.ui.ansApushButton.setDisabled(False)
+        # self.ui.ansBpushButton.setDisabled(False)
+        # self.ui.ansCpushButton.setDisabled(False)
+        # self.ui.ansDpushButton.setDisabled(False)
+        enableAnsButton(self)
 
         self.ui.quesCountlabel.setText(f"{self.quesCount}/{numOfQues}")
         amouOfTime = int(self.ui.amountofTimeInputbox.text().strip())
@@ -63,41 +65,35 @@ class ExamAdmin:
             f"{self.quesCount}/{self.ui.numofQuesInputbox.text().strip()}")
 
     def insertQuesIDToDB(self, quesID):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-
+        conn = create_connection()
         cursor = conn.cursor()
         cursor.execute("INSERT INTO resultsDetail (quesID) VALUES (?)", quesID)
         conn.commit()
         conn.close()
 
     def insertUserAnswerToDB(self, answer):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-
+        conn = create_connection()
         cursor = conn.cursor()
-        cursor.execute("UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", answer, self.curQues[0])
+        cursor.execute(
+            "UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", answer, self.curQues[0])
         conn.commit()
         conn.close()
 
     def saveDetailResultToDB(self):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-
+        conn = create_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT TOP 1 resID FROM userResult ORDER BY resID DESC")
+        cursor.execute(
+            "SELECT TOP 1 resID FROM userResult ORDER BY resID DESC")
         resID = cursor.fetchone()[0]
-        cursor.execute("UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", resID)
+        cursor.execute(
+            "UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", resID)
         conn.commit()
         conn.close()
-    
+
     def checkCorrAns(self, answer):
+        # Insert user's answer into 'urAns'
+        self.insertUserAnswerToDB(answer)
+
         # Check if the selected answer is correct
         if answer == self.curQues[6]:
             self.scoreTrack += 1
@@ -110,8 +106,8 @@ class ExamAdmin:
         if self.quesCount <= int(self.ui.numofQuesInputbox.text().strip()):
             # Proceed to the next question
             self.curQues = chooseRandomQues()
-            self.insertQuesIDToDB(self.curQues[0])  # Insert 'quesID' into 'resultsDetail'
-            self.insertUserAnswerToDB(answer)  # Insert user's answer into 'urAns'
+            # Insert 'quesID' into 'resultsDetail'
+            self.insertQuesIDToDB(self.curQues[0])
             displayQues(self.curQues, self.ui.questionDisplaybox,
                         self.ui.ansAlabel, self.ui.ansBlabel, self.ui.ansClabel, self.ui.ansDlabel)
         else:
@@ -142,30 +138,24 @@ class ExamAdmin:
             QMessageBox.information(self.ui, "Time's up!", "Time has ended.")
 
     def saveResultToDB(self):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-
+        conn = create_connection()
         cursor = conn.cursor()
 
         score_text = f"{
             self.scoreTrack}/{self.ui.numofQuesInputbox.text().strip()}"
-        cursor.execute("INSERT INTO userResult (result) VALUES (?)", score_text)
+        cursor.execute(
+            "INSERT INTO userResult (result) VALUES (?)", score_text)
 
         conn.commit()
         conn.close()
 
     def displayResult(self):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-
+        conn = create_connection()
         cursor = conn.cursor()
 
         # Retrieve the last 5 scores from the 'userResult' table
-        cursor.execute("SELECT TOP 5 result FROM userResult ORDER BY resID DESC")
+        cursor.execute(
+            "SELECT TOP 5 result FROM userResult ORDER BY resID DESC")
         results = cursor.fetchall()
 
         # Display the results in the QLabel widgets
@@ -199,10 +189,7 @@ class ExamAdmin:
         self.ui.progressBar.setValue(0)
 
     def reset_board(self):
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
+        conn = create_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM userResult')
         conn.commit()
@@ -214,12 +201,17 @@ class ExamAdmin:
         self.ui.result5displaylabel.setText("/")
 
 
-def chooseRandomQues():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=HOANGNAM\\SQLEXPRESS;'
-                          'Database=QuestionBank;'
-                          'Trusted_Connection=yes;')
+def cleanUpResultsDetail():
+    conn = create_connection()
+    cursor = conn.cursor()
+    # Delete rows where 'resID' is null
+    cursor.execute("DELETE FROM resultsDetail WHERE resID IS NULL")
+    conn.commit()
+    conn.close()
 
+
+def chooseRandomQues():
+    conn = create_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM questions")
     rows = cursor.fetchall()
@@ -256,4 +248,18 @@ def updateProgressBar(progress_bar):
         progress_bar.setValue(curValue - 1)
     else:
         progress_bar.setValue(0)
-        
+
+
+def enableAnsButton(self):
+    self.ui.ansApushButton.setDisabled(False)
+    self.ui.ansBpushButton.setDisabled(False)
+    self.ui.ansCpushButton.setDisabled(False)
+    self.ui.ansDpushButton.setDisabled(False)
+
+
+def create_connection():
+    conn = pyodbc.connect('Driver={SQL Server};'
+                          'Server=HOANGNAM\\SQLEXPRESS;'
+                          'Database=QuestionBank;'
+                          'Trusted_Connection=yes;')
+    return conn
