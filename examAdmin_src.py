@@ -49,10 +49,6 @@ class ExamAdmin:
                     self.ui.ansAlabel, self.ui.ansBlabel, self.ui.ansClabel, self.ui.ansDlabel)
 
         # Enable the answer buttons
-        # self.ui.ansApushButton.setDisabled(False)
-        # self.ui.ansBpushButton.setDisabled(False)
-        # self.ui.ansCpushButton.setDisabled(False)
-        # self.ui.ansDpushButton.setDisabled(False)
         enableAnsButton(self)
 
         self.ui.quesCountlabel.setText(f"{self.quesCount}/{numOfQues}")
@@ -189,16 +185,26 @@ class ExamAdmin:
         self.ui.progressBar.setValue(0)
 
     def reset_board(self):
-        conn = create_connection()
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM userResult')
-        conn.commit()
-        conn.close()
-        self.ui.result1displaylabel.setText("/")
-        self.ui.result2displaylabel.setText("/")
-        self.ui.result3displaylabel.setText("/")
-        self.ui.result4displaylabel.setText("/")
-        self.ui.result5displaylabel.setText("/")
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Icon.Question)
+        msgBox.setText("Are you sure you want to reset the board?")
+        msgBox.setWindowTitle("Confirmation")
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.StandardButton.Yes:
+            conn = create_connection()
+            cursor = conn.cursor()
+            cursor.execute('DELETE FROM resultsDetail')  # Clear 'resultsDetail' table
+            cursor.execute('DELETE FROM userResult')  # Clear 'userResult' table
+            conn.commit()
+            conn.close()
+            self.ui.result1displaylabel.setText("/")
+            self.ui.result2displaylabel.setText("/")
+            self.ui.result3displaylabel.setText("/")
+            self.ui.result4displaylabel.setText("/")
+            self.ui.result5displaylabel.setText("/")
+
 
 
 def cleanUpResultsDetail():
