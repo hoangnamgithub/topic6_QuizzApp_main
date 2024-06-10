@@ -7,7 +7,7 @@ import pyodbc
 import pickle
 from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 from PyQt6.QtWidgets import QMessageBox
-
+from examAdmin_src import create_connection
 
 def insert_question(ui):
     # Create a QMessageBox for confirmation
@@ -90,10 +90,7 @@ def delete_question(ui):
         row = ui.tableWidget.currentRow()
         quesID = ui.tableWidget.item(row, 0).text()
 
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
+        conn = create_connection()
         cursor = conn.cursor()
 
         # Delete the question from the database
@@ -103,13 +100,7 @@ def delete_question(ui):
         conn.close()
 
         # Reload the QTableWidget
-        ui.IDtxtbox.setText("")
-        ui.questiontxtbox.setText("")
-        ui.ansAtxtbox.setText("")
-        ui.ansBtxtbox.setText("")
-        ui.ansCtxtbox.setText("")
-        ui.ansDtxtbox.setText("")
-        ui.corrAnstxtbox.setText("")
+        ReloadQTableWidget(ui)
         loadData(ui.tableWidget)
         dbToBinFIle()
 
@@ -126,10 +117,7 @@ def updateQues(ui):
     # Show the message box and get the user's response
     returnValue = msgBox.exec()
     if returnValue == QMessageBox.StandardButton.Yes:
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
+        conn = create_connection()
         cursor = conn.cursor()
 
         # Get the updated values from QLineEdit widgets
@@ -186,10 +174,7 @@ def loadData(table_widget):
 
 
 def dbToBinFIle():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=HOANGNAM\\SQLEXPRESS;'
-                          'Database=QuestionBank;'
-                          'Trusted_Connection=yes;')
+    conn = create_connection()
     cursor = conn.cursor()
     # Execute the query
     cursor.execute("SELECT * FROM questions")
@@ -221,3 +206,13 @@ def BinFileTodb():
             ''', row)
     conn.commit()
     conn.close()
+
+
+def ReloadQTableWidget(ui):
+    ui.IDtxtbox.setText("")
+    ui.questiontxtbox.setText("")
+    ui.ansAtxtbox.setText("")
+    ui.ansBtxtbox.setText("")
+    ui.ansCtxtbox.setText("")
+    ui.ansDtxtbox.setText("")
+    ui.corrAnstxtbox.setText("")

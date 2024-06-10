@@ -45,14 +45,13 @@ def createTables():
     if not cursor.fetchone():
         cursor.execute('''
         CREATE TABLE questions (
-            quesID VARCHAR(255),
+            quesID VARCHAR(255) PRIMARY KEY,
             Question VARCHAR(255),
             AnswerA VARCHAR(255),
             AnswerB VARCHAR(255),
             AnswerC VARCHAR(255),
             AnswerD VARCHAR(255),
             CorrectAnswer CHAR(1),
-            PRIMARY KEY (quesID, Question)
         )
         ''')
 
@@ -77,8 +76,7 @@ def createTables():
             quesID VARCHAR(255),
             urAns CHAR(1),
             FOREIGN KEY(resID) REFERENCES userResult(resID),
-            FOREIGN KEY(quesID) REFERENCES questions(quesID),
-            PRIMARY KEY (resID, quesID)
+            FOREIGN KEY(quesID) REFERENCES questions(quesID)
         )
         ''')
 
