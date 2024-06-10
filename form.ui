@@ -50,7 +50,7 @@
     <property name="font">
      <font>
       <family>Open Sans ExtraBold</family>
-      <pointsize>11</pointsize>
+      <pointsize>9</pointsize>
       <bold>true</bold>
      </font>
     </property>
@@ -61,7 +61,7 @@
      <string notr="true">background-color: rgb(194, 248, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="playTab">
      <property name="sizePolicy">
@@ -1870,7 +1870,7 @@ border: 2px solid rgb(0, 0, 0);</string>
      <attribute name="title">
       <string>- R E S U L T -</string>
      </attribute>
-     <widget class="QListWidget" name="listWidget">
+     <widget class="QListWidget" name="listExamWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1935,12 +1935,12 @@ border-radius: 10px;</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QTableWidget" name="tableWidget_2">
+     <widget class="QTableWidget" name="resultTableWidget">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>200</x>
         <y>70</y>
-        <width>761</width>
+        <width>771</width>
         <height>571</height>
        </rect>
       </property>
@@ -1958,7 +1958,7 @@ border-radius: 10px
       </property>
       <column>
        <property name="text">
-        <string>QID</string>
+        <string>ID</string>
        </property>
        <property name="font">
         <font>
@@ -1970,7 +1970,7 @@ border-radius: 10px
       </column>
       <column>
        <property name="text">
-        <string>Correct Ans</string>
+        <string>CorrAns</string>
        </property>
        <property name="font">
         <font>
