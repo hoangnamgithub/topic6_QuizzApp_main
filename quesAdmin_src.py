@@ -153,10 +153,7 @@ def displayInFormulaBar(ui, row):
 
 
 def loadData(table_widget):
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=HOANGNAM\\SQLEXPRESS;'
-                          'Database=QuestionBank;'
-                          'Trusted_Connection=yes;')
+    conn = create_connection()
     cursor = conn.cursor()
     # Execute the query
     cursor.execute("SELECT * FROM questions ORDER BY quesID")
@@ -187,10 +184,7 @@ def dbToBinFIle():
 
 
 def BinFileTodb():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=HOANGNAM\\SQLEXPRESS;'
-                          'Database=QuestionBank;'
-                          'Trusted_Connection=yes;')
+    conn = create_connection()
     cursor = conn.cursor()
     # Load the data from the binary file
     with open('questions.bin', 'rb') as binFile:
