@@ -43,6 +43,7 @@ class ExamAdmin:
 
         # Get a random question and display it
         self.curQues = chooseRandomQues()
+        self.insertQuesIDToDB(self.curQues[0])
         displayQues(self.curQues, self.ui.questionDisplaybox,
                     self.ui.ansAlabel, self.ui.ansBlabel, self.ui.ansClabel, self.ui.ansDlabel)
 
@@ -61,6 +62,41 @@ class ExamAdmin:
         self.ui.quesCountlabel.setText(
             f"{self.quesCount}/{self.ui.numofQuesInputbox.text().strip()}")
 
+    def insertQuesIDToDB(self, quesID):
+        conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=HOANGNAM\\SQLEXPRESS;'
+                              'Database=QuestionBank;'
+                              'Trusted_Connection=yes;')
+
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO resultsDetail (quesID) VALUES (?)", quesID)
+        conn.commit()
+        conn.close()
+
+    def insertUserAnswerToDB(self, answer):
+        conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=HOANGNAM\\SQLEXPRESS;'
+                              'Database=QuestionBank;'
+                              'Trusted_Connection=yes;')
+
+        cursor = conn.cursor()
+        cursor.execute("UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", answer, self.curQues[0])
+        conn.commit()
+        conn.close()
+
+    def saveDetailResultToDB(self):
+        conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=HOANGNAM\\SQLEXPRESS;'
+                              'Database=QuestionBank;'
+                              'Trusted_Connection=yes;')
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT TOP 1 resID FROM userResult ORDER BY resID DESC")
+        resID = cursor.fetchone()[0]
+        cursor.execute("UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", resID)
+        conn.commit()
+        conn.close()
+    
     def checkCorrAns(self, answer):
         # Check if the selected answer is correct
         if answer == self.curQues[6]:
@@ -74,6 +110,8 @@ class ExamAdmin:
         if self.quesCount <= int(self.ui.numofQuesInputbox.text().strip()):
             # Proceed to the next question
             self.curQues = chooseRandomQues()
+            self.insertQuesIDToDB(self.curQues[0])  # Insert 'quesID' into 'resultsDetail'
+            self.insertUserAnswerToDB(answer)  # Insert user's answer into 'urAns'
             displayQues(self.curQues, self.ui.questionDisplaybox,
                         self.ui.ansAlabel, self.ui.ansBlabel, self.ui.ansClabel, self.ui.ansDlabel)
         else:
@@ -83,6 +121,7 @@ class ExamAdmin:
                 self.scoreTrack}/{self.ui.numofQuesInputbox.text().strip()}"
             self.ui.scoretlabel.setText(score_text)
             self.saveResultToDB()
+            self.saveDetailResultToDB()  # Insert 'resID' into 'resultsDetail'
             self.displayResult()
             self.resetToInitialState()
             QMessageBox.information(

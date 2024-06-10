@@ -67,5 +67,20 @@ def createTables():
         )
         ''')
 
+    # Check for table 'resultsDetail' existent
+    cursor.execute(
+            "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'resultsDetail'")
+    if not cursor.fetchone():
+        cursor.execute('''
+        CREATE TABLE resultsDetail (
+            resID INT,
+            quesID VARCHAR(255),
+            urAns CHAR(1),
+            FOREIGN KEY(resID) REFERENCES userResult(resID),
+            FOREIGN KEY(quesID) REFERENCES questions(quesID),
+            PRIMARY KEY (resID, quesID)
+        )
+        ''')
+
     conn.commit()
     conn.close()
