@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
         self.ui.setWindowTitle("TOPIC6_20227247_NguyenHoangNam")
         self.ui.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.ui.tableWidget.setColumnWidth(0, 40)
+        self.ui.resultTableWidget.setColumnWidth(0, 40)
         self.ui.tableWidget.setColumnWidth(1, 150)
         self.ui.ansApushButton.setDisabled(True)
         self.ui.ansBpushButton.setDisabled(True)
@@ -57,6 +58,7 @@ class MainWindow(QMainWindow):
         self.ui.listExamWidget.itemClicked.connect(self.examAdmin.displaySelectedResult)
         self.ui.resetBoard.clicked.connect(self.examAdmin.reset_board)
         self.ui.startButton.clicked.connect(self.examAdmin.startQuiz)
+        self.ui.listExamWidget.itemDoubleClicked.connect(self.deselectItem)
         # setup for "EDIT" tab
         self.ui.confirmEditButton.clicked.connect(lambda: updateQues(self.ui))
         self.ui.delQuesbutton.clicked.connect(lambda: delete_question(self.ui))
@@ -75,6 +77,9 @@ class MainWindow(QMainWindow):
         self.ui.ansCEditWidget.setText("")
         self.ui.ansDEditWidget.setText("")
         self.ui.addQuesWidget_2.hide()
+    def deselectItem(self):
+        self.ui.listExamWidget.clearSelection() # Deselect all items in the QListWidget
+        self.ui.resultTableWidget.setRowCount(0) # Clear the QTableWidget
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
