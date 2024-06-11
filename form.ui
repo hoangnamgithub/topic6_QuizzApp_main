@@ -1866,7 +1866,7 @@ border: 2px solid rgb(0, 0, 0);</string>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="resultTab">
      <attribute name="title">
       <string>- R E S U L T -</string>
      </attribute>
