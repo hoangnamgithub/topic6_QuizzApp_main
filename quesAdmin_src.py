@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 from PyQt6.QtWidgets import QMessageBox
 from examAdmin_src import create_connection
 
+
 def insert_question(ui):
     # Create a QMessageBox for confirmation
     msgBox = QMessageBox()
@@ -150,6 +151,18 @@ def displayInFormulaBar(ui, row):
     ui.ansCtxtbox.setText(ui.tableWidget.item(row, 4).text())
     ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
     ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
+    ui.delQuesbutton.setDisabled(False)
+    ui.addQuesbutton.setDisabled(False)
+
+
+def resetFormulaBar(ui):
+    ui.IDtxtbox.setText("")
+    ui.questiontxtbox.setText("")
+    ui.ansAtxtbox.setText("")
+    ui.ansBtxtbox.setText("")
+    ui.ansCtxtbox.setText("")
+    ui.ansDtxtbox.setText("")
+    ui.corrAnstxtbox.setText("")
 
 
 def loadData(table_widget):
