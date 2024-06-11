@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         BinFileTodb()
         # load data from DB to QTableWidget
         loadData(self.ui.tableWidget)
+        self.examAdmin.displayResults()
         self.examAdmin.displayResult()
 
     # Button setup
@@ -53,6 +54,7 @@ class MainWindow(QMainWindow):
         self.ui.ansCpushButton.clicked.connect(lambda: self.examAdmin.checkCorrAns('C'))
         self.ui.ansDpushButton.clicked.connect(lambda: self.examAdmin.checkCorrAns('D'))
         self.ui.reStartButton.clicked.connect(self.examAdmin.resetToInitialState)
+        self.ui.listExamWidget.itemClicked.connect(self.examAdmin.displaySelectedResult)
         self.ui.resetBoard.clicked.connect(self.examAdmin.reset_board)
         self.ui.startButton.clicked.connect(self.examAdmin.startQuiz)
         # setup for "EDIT" tab
