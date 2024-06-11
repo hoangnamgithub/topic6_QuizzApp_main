@@ -35,7 +35,7 @@ class QuestionAdmin:
             ansD = self.ui.ansDEditWidget.text()
 
             # Get the current text from the QComboBox
-            corrAns = ui.corrAnscomboBox.currentText()
+            corrAns = self.ui.corrAnscomboBox.currentText()
 
             # Check if all QLineEdit widgets have been filled out
             if not all([quesID, question, ansA, ansB, ansC, ansD, corrAns]):
@@ -66,7 +66,7 @@ class QuestionAdmin:
             msgBox.exec()
 
             # Reload the QTableWidget
-            self.ui.loadData(ui.tableWidget)
+            loadData(self.ui.tableWidget)
             self.ui.quesBoxEditWidget.setText("")
             self.ui.ansAEditWidget.setText("")
             self.ui.ansBEditWidget.setText("")
@@ -74,7 +74,7 @@ class QuestionAdmin:
             self.ui.ansDEditWidget.setText("")
             self.ui.corrAnscomboBox.setCurrentIndex(0)
             self.ui.addQuesWidget_2.hide()
-            self.ui.dbToBinFIle()
+            dbToBinFIle()
 
     def delete_question(self):
         # Create a QMessageBox
@@ -94,16 +94,19 @@ class QuestionAdmin:
             conn = create_connection()
             cursor = conn.cursor()
 
-            # Delete the question from the database
+            # Delete the question from the 'resultsDetail' table
+            cursor.execute('DELETE FROM resultsDetail WHERE quesID = ?', quesID)
+
+            # Delete the question from the 'questions' table
             cursor.execute('DELETE FROM questions WHERE quesID = ?', quesID)
 
             conn.commit()
             conn.close()
 
             # Reload the QTableWidget
-            self.ui.ReloadQTableWidget(self.ui)
-        self.ui.loadData(self.ui.tableWidget)
-        self.ui.dbToBinFIle()
+            ReloadQTableWidget(self.ui)
+        loadData(self.ui.tableWidget)
+        dbToBinFIle()
 
     def updateQues(self):
         # Create a QMessageBox
@@ -142,6 +145,7 @@ class QuestionAdmin:
         loadData(self.ui.tableWidget)
 
 def displayInFormulaBar(ui, row):
+    ui.delQuesbutton.setDisabled(False)
     ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
     ui.questiontxtbox.setText(ui.tableWidget.item(row, 1).text())
     ui.ansAtxtbox.setText(ui.tableWidget.item(row, 2).text())
@@ -150,7 +154,7 @@ def displayInFormulaBar(ui, row):
     ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
     ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
     ui.delQuesbutton.setDisabled(False)
-    ui.addQuesbutton.setDisabled(False)
+
 def resetFormulaBar(ui):
     ui.IDtxtbox.setText("")
     ui.questiontxtbox.setText("")
