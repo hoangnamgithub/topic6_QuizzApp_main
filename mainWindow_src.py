@@ -7,7 +7,7 @@
 import sys, pickle, random, pyodbc
 from questionBank_src import createDatabase, createTables
 from examAdmin_src import ExamAdmin
-from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFIle, loadData, displayInFormulaBar
+from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFIle, loadData, displayInFormulaBar, resetFormulaBar
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
     QMessageBox,
 )
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6 import uic, QtWidgets
 
 
@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
         self.ui.ansBpushButton.setDisabled(True)
         self.ui.ansCpushButton.setDisabled(True)
         self.ui.ansDpushButton.setDisabled(True)
+        self.ui.delQuesbutton.setDisabled(True)
         self.ui.IDtxtbox.setDisabled(True)
         self.ui.addQuesWidget_2.hide()
     # Initial state setup 
@@ -88,9 +89,8 @@ class MainWindow(QMainWindow):
         self.examAdmin.displayAllResults()
     def deselectCell(self):
         self.ui.tableWidget.clearSelection() # Deselect all cells in the QTableWidget
-        self.ui.addQuesbutton.setDisabled(True)
         self.ui.delQuesbutton.setDisabled(True)
-        self.questionAdmin.resetFormulaBar()
+        resetFormulaBar(self.ui)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

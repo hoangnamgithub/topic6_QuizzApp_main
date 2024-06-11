@@ -208,6 +208,8 @@ class ExamAdmin:
             self.ui.result3displaylabel.setText("/")
             self.ui.result4displaylabel.setText("/")
             self.ui.result5displaylabel.setText("/")
+            self.ui.listExamWidget.clear()
+        self.displayAllResults()
         self.displayResult()
 
     def displayResults(self):
