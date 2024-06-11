@@ -2075,7 +2075,7 @@ border: 3px solid rgb(0, 0, 0);
 border-radius: 10px;</string>
       </property>
       <property name="text">
-       <string>- T E S T   N O. -</string>
+       <string>- R E S U L T  L I S T-</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
