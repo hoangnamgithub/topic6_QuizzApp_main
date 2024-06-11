@@ -14,7 +14,7 @@ class QuestionAdmin:
     def __init__(self, ui):
         self.ui = ui
 
-    def insert_question(ui):
+    def insert_question(self):
         # Create a QMessageBox for confirmation
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
@@ -27,12 +27,12 @@ class QuestionAdmin:
         returnValue = msgBox.exec()
         if returnValue == QMessageBox.StandardButton.Yes:
             # Get the text from the QLineEdit widgets
-            quesID = ui.IDEditWidget.text()
-            question = ui.quesBoxEditWidget.text()
-            ansA = ui.ansAEditWidget.text()
-            ansB = ui.ansBEditWidget.text()
-            ansC = ui.ansCEditWidget.text()
-            ansD = ui.ansDEditWidget.text()
+            quesID = self.ui.IDEditWidget.text()
+            question = self.ui.quesBoxEditWidget.text()
+            ansA = self.ui.ansAEditWidget.text()
+            ansB = self.ui.ansBEditWidget.text()
+            ansC = self.ui.ansCEditWidget.text()
+            ansD = self.ui.ansDEditWidget.text()
 
             # Get the current text from the QComboBox
             corrAns = ui.corrAnscomboBox.currentText()
@@ -46,10 +46,7 @@ class QuestionAdmin:
                 msgBox.exec()
                 return
 
-            conn = pyodbc.connect('Driver={SQL Server};'
-                                  'Server=HOANGNAM\\SQLEXPRESS;'
-                                  'Database=QuestionBank;'
-                                  'Trusted_Connection=yes;')
+            conn = create_connection()
             cursor = conn.cursor()
 
             # Insert the new question into the database
@@ -69,17 +66,17 @@ class QuestionAdmin:
             msgBox.exec()
 
             # Reload the QTableWidget
-            ui.loadData(ui.tableWidget)
-            ui.quesBoxEditWidget.setText("")
-            ui.ansAEditWidget.setText("")
-            ui.ansBEditWidget.setText("")
-            ui.ansCEditWidget.setText("")
-            ui.ansDEditWidget.setText("")
-            ui.corrAnscomboBox.setCurrentIndex(0)
-            ui.addQuesWidget_2.hide()
-            ui.dbToBinFIle()
+            self.ui.loadData(ui.tableWidget)
+            self.ui.quesBoxEditWidget.setText("")
+            self.ui.ansAEditWidget.setText("")
+            self.ui.ansBEditWidget.setText("")
+            self.ui.ansCEditWidget.setText("")
+            self.ui.ansDEditWidget.setText("")
+            self.ui.corrAnscomboBox.setCurrentIndex(0)
+            self.ui.addQuesWidget_2.hide()
+            self.ui.dbToBinFIle()
 
-    def delete_question(ui):
+    def delete_question(self):
         # Create a QMessageBox
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
@@ -91,8 +88,8 @@ class QuestionAdmin:
         # Show the message box and get the user's response
         returnValue = msgBox.exec()
         if returnValue == QMessageBox.StandardButton.Yes:
-            row = ui.tableWidget.currentRow()
-            quesID = ui.tableWidget.item(row, 0).text()
+            row = self.ui.tableWidget.currentRow()
+            quesID = self.ui.tableWidget.item(row, 0).text()
 
             conn = create_connection()
             cursor = conn.cursor()
@@ -104,11 +101,11 @@ class QuestionAdmin:
             conn.close()
 
             # Reload the QTableWidget
-            ui.ReloadQTableWidget(ui)
-        ui.loadData(ui.tableWidget)
-        ui.dbToBinFIle()
+            self.ui.ReloadQTableWidget(self.ui)
+        self.ui.loadData(self.ui.tableWidget)
+        self.ui.dbToBinFIle()
 
-    def updateQues(ui):
+    def updateQues(self):
         # Create a QMessageBox
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
@@ -124,13 +121,13 @@ class QuestionAdmin:
             cursor = conn.cursor()
 
             # Get the updated values from QLineEdit widgets
-            quesID = ui.IDtxtbox.text()
-        question = ui.questiontxtbox.text()
-        ansA = ui.ansAtxtbox.text()
-        ansB = ui.ansBtxtbox.text()
-        ansC = ui.ansCtxtbox.text()
-        ansD = ui.ansDtxtbox.text()
-        corrAns = ui.corrAnstxtbox.text()
+            quesID = self.ui.IDtxtbox.text()
+        question = self.ui.questiontxtbox.text()
+        ansA = self.ui.ansAtxtbox.text()
+        ansB = self.ui.ansBtxtbox.text()
+        ansC = self.ui.ansCtxtbox.text()
+        ansD = self.ui.ansDtxtbox.text()
+        corrAns = self.ui.corrAnstxtbox.text()
 
         # Update the question in the database
         cursor.execute('''
@@ -141,28 +138,27 @@ class QuestionAdmin:
 
         conn.commit()
         conn.close()
-        ui.dbToBinFIle()
-        ui.loadData(ui.tableWidget)
+        dbToBinFIle()
+        loadData(self.ui.tableWidget)
 
-    def displayInFormulaBar(ui, row):
-        ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
-        ui.questiontxtbox.setText(ui.tableWidget.item(row, 1).text())
-        ui.ansAtxtbox.setText(ui.tableWidget.item(row, 2).text())
-        ui.ansBtxtbox.setText(ui.tableWidget.item(row, 3).text())
-        ui.ansCtxtbox.setText(ui.tableWidget.item(row, 4).text())
-        ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
-        ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
-        ui.delQuesbutton.setDisabled(False)
-        ui.addQuesbutton.setDisabled(False)
-
-    def resetFormulaBar(ui):
-        ui.IDtxtbox.setText("")
-        ui.questiontxtbox.setText("")
-        ui.ansAtxtbox.setText("")
-        ui.ansBtxtbox.setText("")
-        ui.ansCtxtbox.setText("")
-        ui.ansDtxtbox.setText("")
-        ui.corrAnstxtbox.setText("")
+def displayInFormulaBar(ui, row):
+    ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
+    ui.questiontxtbox.setText(ui.tableWidget.item(row, 1).text())
+    ui.ansAtxtbox.setText(ui.tableWidget.item(row, 2).text())
+    ui.ansBtxtbox.setText(ui.tableWidget.item(row, 3).text())
+    ui.ansCtxtbox.setText(ui.tableWidget.item(row, 4).text())
+    ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
+    ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
+    ui.delQuesbutton.setDisabled(False)
+    ui.addQuesbutton.setDisabled(False)
+def resetFormulaBar(ui):
+    ui.IDtxtbox.setText("")
+    ui.questiontxtbox.setText("")
+    ui.ansAtxtbox.setText("")
+    ui.ansBtxtbox.setText("")
+    ui.ansCtxtbox.setText("")
+    ui.ansDtxtbox.setText("")
+    ui.corrAnstxtbox.setText("")
 
 
 def loadData(table_widget):
