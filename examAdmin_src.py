@@ -117,6 +117,7 @@ class ExamAdmin:
             self.displayResult()
             self.resetToInitialState()
             self.displayResults()
+            self.displayAllResults()
             QMessageBox.information(
                 self.ui, "Quiz Finished", "You have answered all questions.")
 
@@ -133,6 +134,7 @@ class ExamAdmin:
             self.displayResult()
             self.resetToInitialState()
             self.displayResults()
+            self.displayAllResults()
             QMessageBox.information(self.ui, "Time's up!", "Time has ended.")
 
     def saveResultToDB(self):
@@ -206,6 +208,7 @@ class ExamAdmin:
             self.ui.result3displaylabel.setText("/")
             self.ui.result4displaylabel.setText("/")
             self.ui.result5displaylabel.setText("/")
+        self.displayResult()
 
     def displayResults(self):
         # Connect to the database
@@ -245,7 +248,7 @@ class ExamAdmin:
 
                 # Execute the query
                 cursor.execute("""
-                    SELECT q.quesID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
+                    SELECT q.quesID, rd.resID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
                     FROM resultsDetail rd
                     INNER JOIN questions q ON rd.quesID = q.quesID
                     WHERE rd.resID = ?
@@ -266,6 +269,32 @@ class ExamAdmin:
             # Close the connection
             conn.close()
 
+    def displayAllResults(self):
+        # Connect to the database
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        # Execute a query to select all data
+        cursor.execute("""
+            SELECT q.quesID, rd.resID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
+            FROM resultsDetail rd
+            INNER JOIN questions q ON rd.quesID = q.quesID
+        """)
+
+        # Fetch all rows from the last executed statement
+        results = cursor.fetchall()
+
+        # Clear the QTableWidget
+        self.ui.resultTableWidget.setRowCount(0)
+
+        # Add items to the QTableWidget
+        for row_number, row_data in enumerate(results):
+            self.ui.resultTableWidget.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.ui.resultTableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+        # Close the connection
+        conn.close()
 
 def cleanUpResultsDetail():
     conn = create_connection()
