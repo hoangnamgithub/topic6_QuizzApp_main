@@ -10,119 +10,121 @@ from PyQt6.QtWidgets import QMessageBox
 from examAdmin_src import create_connection
 
 
-def insert_question(ui):
-    # Create a QMessageBox for confirmation
-    msgBox = QMessageBox()
-    msgBox.setIcon(QMessageBox.Icon.Question)
-    msgBox.setText("Are you sure you want to add this question?")
-    msgBox.setWindowTitle("Confirmation")
-    msgBox.setStandardButtons(
-        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+class QuestionAdmin:
+    def __init__(self, ui):
+        self.ui = ui
 
-    # Show the message box and get the user's response
-    returnValue = msgBox.exec()
-    if returnValue == QMessageBox.StandardButton.Yes:
-        # Get the text from the QLineEdit widgets
-        quesID = ui.IDEditWidget.text()
-        question = ui.quesBoxEditWidget.text()
-        ansA = ui.ansAEditWidget.text()
-        ansB = ui.ansBEditWidget.text()
-        ansC = ui.ansCEditWidget.text()
-        ansD = ui.ansDEditWidget.text()
-
-        # Get the current text from the QComboBox
-        corrAns = ui.corrAnscomboBox.currentText()
-
-        # Check if all QLineEdit widgets have been filled out
-        if not all([quesID, question, ansA, ansB, ansC, ansD, corrAns]):
-            msgBox = QMessageBox()
-            msgBox.setIcon(QMessageBox.Icon.Warning)
-            msgBox.setText("Please fill out all fields before submitting.")
-            msgBox.setWindowTitle("Warning")
-            msgBox.exec()
-            return
-
-        conn = pyodbc.connect('Driver={SQL Server};'
-                              'Server=HOANGNAM\\SQLEXPRESS;'
-                              'Database=QuestionBank;'
-                              'Trusted_Connection=yes;')
-        cursor = conn.cursor()
-
-        # Insert the new question into the database
-        cursor.execute('''
-            INSERT INTO questions (quesID, Question, AnswerA, AnswerB, AnswerC, AnswerD, CorrectAnswer)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (quesID, question, ansA, ansB, ansC, ansD, corrAns))
-
-        conn.commit()
-        conn.close()
-
-        # Success message box
+    def insert_question(ui):
+        # Create a QMessageBox for confirmation
         msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Icon.Information)
-        msgBox.setText("Question added successfully.")
-        msgBox.setWindowTitle("Success")
-        msgBox.exec()
+        msgBox.setIcon(QMessageBox.Icon.Question)
+        msgBox.setText("Are you sure you want to add this question?")
+        msgBox.setWindowTitle("Confirmation")
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
-        # Reload the QTableWidget
-        loadData(ui.tableWidget)
-        ui.quesBoxEditWidget.setText("")
-        ui.ansAEditWidget.setText("")
-        ui.ansBEditWidget.setText("")
-        ui.ansCEditWidget.setText("")
-        ui.ansDEditWidget.setText("")
-        ui.corrAnscomboBox.setCurrentIndex(0)
-        ui.addQuesWidget_2.hide()
-        dbToBinFIle()
+        # Show the message box and get the user's response
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.StandardButton.Yes:
+            # Get the text from the QLineEdit widgets
+            quesID = ui.IDEditWidget.text()
+            question = ui.quesBoxEditWidget.text()
+            ansA = ui.ansAEditWidget.text()
+            ansB = ui.ansBEditWidget.text()
+            ansC = ui.ansCEditWidget.text()
+            ansD = ui.ansDEditWidget.text()
 
+            # Get the current text from the QComboBox
+            corrAns = ui.corrAnscomboBox.currentText()
 
-def delete_question(ui):
-    # Create a QMessageBox
-    msgBox = QMessageBox()
-    msgBox.setIcon(QMessageBox.Icon.Question)
-    msgBox.setText("Are you sure you want to delete this question?")
-    msgBox.setWindowTitle("Confirmation")
-    msgBox.setStandardButtons(
-        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-    msgBox.setDefaultButton(QMessageBox.StandardButton.No)
-    # Show the message box and get the user's response
-    returnValue = msgBox.exec()
-    if returnValue == QMessageBox.StandardButton.Yes:
-        row = ui.tableWidget.currentRow()
-        quesID = ui.tableWidget.item(row, 0).text()
+            # Check if all QLineEdit widgets have been filled out
+            if not all([quesID, question, ansA, ansB, ansC, ansD, corrAns]):
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Icon.Warning)
+                msgBox.setText("Please fill out all fields before submitting.")
+                msgBox.setWindowTitle("Warning")
+                msgBox.exec()
+                return
 
-        conn = create_connection()
-        cursor = conn.cursor()
+            conn = pyodbc.connect('Driver={SQL Server};'
+                                  'Server=HOANGNAM\\SQLEXPRESS;'
+                                  'Database=QuestionBank;'
+                                  'Trusted_Connection=yes;')
+            cursor = conn.cursor()
 
-        # Delete the question from the database
-        cursor.execute('DELETE FROM questions WHERE quesID = ?', quesID)
+            # Insert the new question into the database
+            cursor.execute('''
+                INSERT INTO questions (quesID, Question, AnswerA, AnswerB, AnswerC, AnswerD, CorrectAnswer)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (quesID, question, ansA, ansB, ansC, ansD, corrAns))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
 
-        # Reload the QTableWidget
-        ReloadQTableWidget(ui)
-        loadData(ui.tableWidget)
-        dbToBinFIle()
+            # Success message box
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Icon.Information)
+            msgBox.setText("Question added successfully.")
+            msgBox.setWindowTitle("Success")
+            msgBox.exec()
 
+            # Reload the QTableWidget
+            ui.loadData(ui.tableWidget)
+            ui.quesBoxEditWidget.setText("")
+            ui.ansAEditWidget.setText("")
+            ui.ansBEditWidget.setText("")
+            ui.ansCEditWidget.setText("")
+            ui.ansDEditWidget.setText("")
+            ui.corrAnscomboBox.setCurrentIndex(0)
+            ui.addQuesWidget_2.hide()
+            ui.dbToBinFIle()
 
-def updateQues(ui):
-    # Create a QMessageBox
-    msgBox = QMessageBox()
-    msgBox.setIcon(QMessageBox.Icon.Question)
-    msgBox.setText("Are you sure you want to update this question?")
-    msgBox.setWindowTitle("Confirmation")
-    msgBox.setStandardButtons(
-        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-    msgBox.setDefaultButton(QMessageBox.StandardButton.No)
-    # Show the message box and get the user's response
-    returnValue = msgBox.exec()
-    if returnValue == QMessageBox.StandardButton.Yes:
-        conn = create_connection()
-        cursor = conn.cursor()
+    def delete_question(ui):
+        # Create a QMessageBox
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Icon.Question)
+        msgBox.setText("Are you sure you want to delete this question?")
+        msgBox.setWindowTitle("Confirmation")
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgBox.setDefaultButton(QMessageBox.StandardButton.No)
+        # Show the message box and get the user's response
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.StandardButton.Yes:
+            row = ui.tableWidget.currentRow()
+            quesID = ui.tableWidget.item(row, 0).text()
 
-        # Get the updated values from QLineEdit widgets
-        quesID = ui.IDtxtbox.text()
+            conn = create_connection()
+            cursor = conn.cursor()
+
+            # Delete the question from the database
+            cursor.execute('DELETE FROM questions WHERE quesID = ?', quesID)
+
+            conn.commit()
+            conn.close()
+
+            # Reload the QTableWidget
+            ui.ReloadQTableWidget(ui)
+        ui.loadData(ui.tableWidget)
+        ui.dbToBinFIle()
+
+    def updateQues(ui):
+        # Create a QMessageBox
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Icon.Question)
+        msgBox.setText("Are you sure you want to update this question?")
+        msgBox.setWindowTitle("Confirmation")
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgBox.setDefaultButton(QMessageBox.StandardButton.No)
+        # Show the message box and get the user's response
+        returnValue = msgBox.exec()
+        if returnValue == QMessageBox.StandardButton.Yes:
+            conn = create_connection()
+            cursor = conn.cursor()
+
+            # Get the updated values from QLineEdit widgets
+            quesID = ui.IDtxtbox.text()
         question = ui.questiontxtbox.text()
         ansA = ui.ansAtxtbox.text()
         ansB = ui.ansBtxtbox.text()
@@ -139,30 +141,28 @@ def updateQues(ui):
 
         conn.commit()
         conn.close()
-        dbToBinFIle()
-        loadData(ui.tableWidget)
+        ui.dbToBinFIle()
+        ui.loadData(ui.tableWidget)
 
+    def displayInFormulaBar(ui, row):
+        ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
+        ui.questiontxtbox.setText(ui.tableWidget.item(row, 1).text())
+        ui.ansAtxtbox.setText(ui.tableWidget.item(row, 2).text())
+        ui.ansBtxtbox.setText(ui.tableWidget.item(row, 3).text())
+        ui.ansCtxtbox.setText(ui.tableWidget.item(row, 4).text())
+        ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
+        ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
+        ui.delQuesbutton.setDisabled(False)
+        ui.addQuesbutton.setDisabled(False)
 
-def displayInFormulaBar(ui, row):
-    ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
-    ui.questiontxtbox.setText(ui.tableWidget.item(row, 1).text())
-    ui.ansAtxtbox.setText(ui.tableWidget.item(row, 2).text())
-    ui.ansBtxtbox.setText(ui.tableWidget.item(row, 3).text())
-    ui.ansCtxtbox.setText(ui.tableWidget.item(row, 4).text())
-    ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
-    ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
-    ui.delQuesbutton.setDisabled(False)
-    ui.addQuesbutton.setDisabled(False)
-
-
-def resetFormulaBar(ui):
-    ui.IDtxtbox.setText("")
-    ui.questiontxtbox.setText("")
-    ui.ansAtxtbox.setText("")
-    ui.ansBtxtbox.setText("")
-    ui.ansCtxtbox.setText("")
-    ui.ansDtxtbox.setText("")
-    ui.corrAnstxtbox.setText("")
+    def resetFormulaBar(ui):
+        ui.IDtxtbox.setText("")
+        ui.questiontxtbox.setText("")
+        ui.ansAtxtbox.setText("")
+        ui.ansBtxtbox.setText("")
+        ui.ansCtxtbox.setText("")
+        ui.ansDtxtbox.setText("")
+        ui.corrAnstxtbox.setText("")
 
 
 def loadData(table_widget):

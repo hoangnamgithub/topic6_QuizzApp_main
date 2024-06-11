@@ -7,7 +7,7 @@
 import sys, pickle, random, pyodbc
 from questionBank_src import createDatabase, createTables
 from examAdmin_src import ExamAdmin
-from quesAdmin_src import loadData, BinFileTodb, dbToBinFIle, displayInFormulaBar, updateQues, delete_question, insert_question, resetFormulaBar
+from quesAdmin_src import QuestionAdmin
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -42,11 +42,12 @@ class MainWindow(QMainWindow):
     # Initial state setup 
         # create Database and Table
         self.examAdmin = ExamAdmin(self.ui)
+        self.questionAdmin = QuestionAdmin(self.ui)
         createDatabase()
         createTables()
-        BinFileTodb()
+        self.BinFileTodb()
         # load data from DB to QTableWidget
-        loadData(self.ui.tableWidget)
+        self.questionAdmin.loadData()
         self.examAdmin.displayResults()
         self.examAdmin.displayResult()
         self.examAdmin.displayAllResults()
@@ -64,11 +65,11 @@ class MainWindow(QMainWindow):
         self.ui.listExamWidget.itemDoubleClicked.connect(self.deselectItem)
         self.ui.tableWidget.cellDoubleClicked.connect(self.deselectCell)
         # setup for "EDIT" tab
-        self.ui.confirmEditButton.clicked.connect(lambda: updateQues(self.ui))
-        self.ui.delQuesbutton.clicked.connect(lambda: delete_question(self.ui))
-        self.ui.tableWidget.cellClicked.connect(lambda row, column: displayInFormulaBar(self.ui, row))
+        self.ui.confirmEditButton.clicked.connect(self.questionAdmin.updateQues)
+        self.ui.delQuesbutton.clicked.connect(self.questionAdmin.delete_question)
+        self.ui.tableWidget.cellClicked.connect(lambda row, column: self.questionAdmin.displayInFormulaBar(row))
         self.ui.addQuesbutton.clicked.connect(self.switchToAddquesWidget)
-        self.ui.submitButton.clicked.connect(lambda: insert_question(self.ui))
+        self.ui.submitButton.clicked.connect(self.questionAdmin.insert_question)
         self.ui.cancelButton.clicked.connect(self.closeAddQuesWidget)
         self.show()
         
@@ -89,7 +90,7 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.clearSelection() # Deselect all cells in the QTableWidget
         self.ui.addQuesbutton.setDisabled(True)
         self.ui.delQuesbutton.setDisabled(True)
-        resetFormulaBar(self.ui)
+        self.questionAdmin.resetFormulaBar()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
