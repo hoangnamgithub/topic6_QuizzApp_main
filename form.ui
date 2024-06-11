@@ -1875,7 +1875,7 @@ border: 2px solid rgb(0, 0, 0);</string>
        <rect>
         <x>10</x>
         <y>130</y>
-        <width>181</width>
+        <width>131</width>
         <height>511</height>
        </rect>
       </property>
@@ -1898,12 +1898,18 @@ border-radius: 10px
       <property name="editTriggers">
        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
       </property>
+      <property name="itemAlignment">
+       <set>Qt::AlignCenter</set>
+      </property>
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
       <item>
        <property name="text">
         <string>TEST 1</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
        </property>
       </item>
      </widget>
@@ -1938,9 +1944,9 @@ border-radius: 10px;</string>
      <widget class="QTableWidget" name="resultTableWidget">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>150</x>
         <y>70</y>
-        <width>771</width>
+        <width>821</width>
         <height>571</height>
        </rect>
       </property>
@@ -2058,7 +2064,7 @@ border-radius: 10px
        <rect>
         <x>10</x>
         <y>70</y>
-        <width>181</width>
+        <width>131</width>
         <height>51</height>
        </rect>
       </property>
@@ -2075,7 +2081,7 @@ border: 3px solid rgb(0, 0, 0);
 border-radius: 10px;</string>
       </property>
       <property name="text">
-       <string>- R E S U L T  L I S T-</string>
+       <string>-R E S U L T-</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

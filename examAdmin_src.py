@@ -116,6 +116,7 @@ class ExamAdmin:
             self.saveDetailResultToDB()  # Insert 'resID' into 'resultsDetail'
             self.displayResult()
             self.resetToInitialState()
+            self.displayResults()
             QMessageBox.information(
                 self.ui, "Quiz Finished", "You have answered all questions.")
 
@@ -131,6 +132,7 @@ class ExamAdmin:
             self.saveResultToDB()
             self.displayResult()
             self.resetToInitialState()
+            self.displayResults()
             QMessageBox.information(self.ui, "Time's up!", "Time has ended.")
 
     def saveResultToDB(self):
@@ -205,6 +207,64 @@ class ExamAdmin:
             self.ui.result4displaylabel.setText("/")
             self.ui.result5displaylabel.setText("/")
 
+    def displayResults(self):
+        # Connect to the database
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        # Execute the query
+        cursor.execute("SELECT result FROM userResult")
+
+        # Fetch all rows from the last executed statement
+        results = cursor.fetchall()
+
+        # Clear the QListWidget
+        self.ui.listExamWidget.clear()
+
+        # Add items to the QListWidget
+        for result in results:
+            self.ui.listExamWidget.addItem(str(result[0]))
+
+        # Close the connection
+        conn.close()
+        
+    def displaySelectedResult(self):
+        # Get the selected item from the QListWidget
+        selected_item = self.ui.listExamWidget.currentItem()
+
+        if selected_item is not None:
+            # Connect to the database
+            conn = create_connection()
+            cursor = conn.cursor()
+
+            # Get the resID for the selected result
+            cursor.execute("SELECT resID FROM userResult WHERE result = ?", selected_item.text())
+            resID = cursor.fetchone()
+            if resID is not None:
+                resID = resID[0]  # Get the first column of the first (and only) row
+
+                # Execute the query
+                cursor.execute("""
+                    SELECT q.quesID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
+                    FROM resultsDetail rd
+                    INNER JOIN questions q ON rd.quesID = q.quesID
+                    WHERE rd.resID = ?
+                """, resID)
+
+                # Fetch all rows from the last executed statement
+                results = cursor.fetchall()
+
+                # Clear the QTableWidget
+                self.ui.resultTableWidget.setRowCount(0)
+
+                # Add items to the QTableWidget
+                for row_number, row_data in enumerate(results):
+                    self.ui.resultTableWidget.insertRow(row_number)
+                    for column_number, data in enumerate(row_data):
+                        self.ui.resultTableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+            # Close the connection
+            conn.close()
 
 
 def cleanUpResultsDetail():
