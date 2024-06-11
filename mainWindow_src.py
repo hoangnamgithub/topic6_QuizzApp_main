@@ -7,7 +7,7 @@
 import sys, pickle, random, pyodbc
 from questionBank_src import createDatabase, createTables
 from examAdmin_src import ExamAdmin
-from quesAdmin_src import QuestionAdmin
+from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFIle, loadData, displayInFormulaBar
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -45,9 +45,9 @@ class MainWindow(QMainWindow):
         self.questionAdmin = QuestionAdmin(self.ui)
         createDatabase()
         createTables()
-        self.BinFileTodb()
+        BinFileTodb()
         # load data from DB to QTableWidget
-        self.questionAdmin.loadData()
+        loadData(self.ui.tableWidget)
         self.examAdmin.displayResults()
         self.examAdmin.displayResult()
         self.examAdmin.displayAllResults()
@@ -67,7 +67,7 @@ class MainWindow(QMainWindow):
         # setup for "EDIT" tab
         self.ui.confirmEditButton.clicked.connect(self.questionAdmin.updateQues)
         self.ui.delQuesbutton.clicked.connect(self.questionAdmin.delete_question)
-        self.ui.tableWidget.cellClicked.connect(lambda row, column: self.questionAdmin.displayInFormulaBar(row))
+        self.ui.tableWidget.cellClicked.connect(lambda row, column: displayInFormulaBar(self.ui, row))
         self.ui.addQuesbutton.clicked.connect(self.switchToAddquesWidget)
         self.ui.submitButton.clicked.connect(self.questionAdmin.insert_question)
         self.ui.cancelButton.clicked.connect(self.closeAddQuesWidget)
