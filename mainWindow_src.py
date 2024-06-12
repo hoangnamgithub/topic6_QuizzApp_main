@@ -8,7 +8,7 @@ import sys
 import pickle
 import random
 import sqlite3
-from questionBank_src import createDatabase, createTables
+from questionBank_src import createDatabase
 from examAdmin_src import ExamAdmin
 from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFIle, loadData, displayInFormulaBar, resetFormulaBar
 
@@ -49,7 +49,6 @@ class MainWindow(QMainWindow):
         self.examAdmin = ExamAdmin(self.ui)
         self.questionAdmin = QuestionAdmin(self.ui)
         createDatabase()
-        createTables()
         BinFileTodb()
         # load data from DB to QTableWidget
         loadData(self.ui.tableWidget)
@@ -98,7 +97,6 @@ class MainWindow(QMainWindow):
         self.ui.addQuesWidget_2.hide()
 
     def deselectItem(self):
-        # Deselect all items in the QListWidget
         self.ui.listExamWidget.clearSelection()
         self.ui.resultTableWidget.setRowCount(0)  # Clear the QTableWidget
         self.examAdmin.displayAllResults()

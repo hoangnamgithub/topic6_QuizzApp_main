@@ -49,4 +49,3 @@ def createDatabase():
     conn.close()
 
 
-createDatabase()
