@@ -61,7 +61,7 @@
      <string notr="true">background-color: rgb(194, 248, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="playTab">
      <property name="sizePolicy">
@@ -1333,7 +1333,7 @@ background-color: rgb(128, 237, 153);</string>
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
           </property>
           <property name="placeholderText">
-           <string> Correct Answer</string>
+           <string> Correct Answer (A, B, C or D)</string>
           </property>
          </widget>
         </item>
@@ -1919,7 +1919,7 @@ border-radius: 10px
         <x>10</x>
         <y>10</y>
         <width>961</width>
-        <height>51</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="font">
@@ -1932,7 +1932,7 @@ border-radius: 10px
       <property name="styleSheet">
        <string notr="true">background-color: rgb(230, 57, 70);
 border: 3px solid rgb(0, 0, 0);
-border-radius: 10px;</string>
+</string>
       </property>
       <property name="text">
        <string>- TOPIC 6 - 20227247 - NGUYEN HOANG NAM -</string>
@@ -1945,9 +1945,9 @@ border-radius: 10px;</string>
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>70</y>
+        <y>130</y>
         <width>821</width>
-        <height>571</height>
+        <height>511</height>
        </rect>
       </property>
       <property name="font">
@@ -2095,9 +2095,9 @@ border-radius: 10px
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
-        <width>131</width>
-        <height>51</height>
+        <y>50</y>
+        <width>961</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="font">
@@ -2110,7 +2110,7 @@ border-radius: 10px
       <property name="styleSheet">
        <string notr="true">background-color: rgb(230, 57, 70);
 border: 3px solid rgb(0, 0, 0);
-border-radius: 10px;</string>
+</string>
       </property>
       <property name="text">
        <string>-R E S U L T-</string>

@@ -72,6 +72,7 @@ class QuestionAdmin:
             self.ui.ansBEditWidget.setText("")
             self.ui.ansCEditWidget.setText("")
             self.ui.ansDEditWidget.setText("")
+            self.ui.IDEditWidget.setText("")
             self.ui.corrAnscomboBox.setCurrentIndex(0)
             self.ui.addQuesWidget_2.hide()
             dbToBinFIle()
@@ -125,24 +126,36 @@ class QuestionAdmin:
 
             # Get the updated values from QLineEdit widgets
             quesID = self.ui.IDtxtbox.text()
-        question = self.ui.questiontxtbox.text()
-        ansA = self.ui.ansAtxtbox.text()
-        ansB = self.ui.ansBtxtbox.text()
-        ansC = self.ui.ansCtxtbox.text()
-        ansD = self.ui.ansDtxtbox.text()
-        corrAns = self.ui.corrAnstxtbox.text()
+            question = self.ui.questiontxtbox.text()
+            ansA = self.ui.ansAtxtbox.text()
+            ansB = self.ui.ansBtxtbox.text()
+            ansC = self.ui.ansCtxtbox.text()
+            ansD = self.ui.ansDtxtbox.text()
+            corrAns = self.ui.corrAnstxtbox.text()
 
-        # Update the question in the database
-        cursor.execute('''
-            UPDATE questions
-            SET Question = ?, AnswerA = ?, AnswerB = ?, AnswerC = ?, AnswerD = ?, CorrectAnswer = ?
-            WHERE quesID = ?
-        ''', (question, ansA, ansB, ansC, ansD, corrAns, quesID))
+            # Check if all fields are filled out
+            if not all([quesID, question, ansA, ansB, ansC, ansD, corrAns]):
+                QMessageBox.warning(
+                    self.ui, 'Warning', 'Please fill out all fields before submitting.')
+                return
 
-        conn.commit()
-        conn.close()
-        dbToBinFIle()
-        loadData(self.ui.tableWidget)
+            # Check if the correct answer is one of 'A', 'B', 'C', or 'D'
+            if corrAns not in {'A', 'B', 'C', 'D'}:
+                QMessageBox.warning(
+                    self.ui, 'Warning', 'The correct answer must be one of A, B, C, or D.')
+                return
+
+            # Update the question in the database
+            cursor.execute('''
+                UPDATE questions
+                SET Question = ?, AnswerA = ?, AnswerB = ?, AnswerC = ?, AnswerD = ?, CorrectAnswer = ?
+                WHERE quesID = ?
+            ''', (question, ansA, ansB, ansC, ansD, corrAns, quesID))
+
+            conn.commit()
+            conn.close()
+            dbToBinFIle()
+            loadData(self.ui.tableWidget)
 
 def displayInFormulaBar(ui, row):
     ui.delQuesbutton.setDisabled(False)
