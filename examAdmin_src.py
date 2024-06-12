@@ -9,6 +9,16 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 
 
+import sqlite3
+import random
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
+
+
+def create_connection():
+    return sqlite3.connect('QuestionBank.db')
+
+
 class ExamAdmin:
     def __init__(self, ui):
         self.ui = ui
@@ -63,7 +73,8 @@ class ExamAdmin:
     def insertQuesIDToDB(self, quesID):
         conn = create_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO resultsDetail (quesID) VALUES (?)", quesID)
+        cursor.execute(
+            "INSERT INTO resultsDetail (quesID) VALUES (?)", (quesID,))
         conn.commit()
         conn.close()
 
@@ -71,7 +82,7 @@ class ExamAdmin:
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", answer, self.curQues[0])
+            "UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", (answer, self.curQues[0]))
         conn.commit()
         conn.close()
 
@@ -79,10 +90,10 @@ class ExamAdmin:
         conn = create_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT TOP 1 resID FROM userResult ORDER BY resID DESC")
+            "SELECT resID FROM userResult ORDER BY resID DESC LIMIT 1")
         resID = cursor.fetchone()[0]
         cursor.execute(
-            "UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", resID)
+            "UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", (resID,))
         conn.commit()
         conn.close()
 
@@ -145,7 +156,7 @@ class ExamAdmin:
         score_text = f"{
             self.scoreTrack}/{self.ui.numofQuesInputbox.text().strip()}"
         cursor.execute(
-            "INSERT INTO userResult (result) VALUES (?)", score_text)
+            "INSERT INTO userResult (result) VALUES (?)", (score_text,))
 
         conn.commit()
         conn.close()
@@ -156,7 +167,7 @@ class ExamAdmin:
 
         # Retrieve the last 5 scores from the 'userResult' table
         cursor.execute(
-            "SELECT TOP 5 result FROM userResult ORDER BY resID DESC")
+            "SELECT result FROM userResult ORDER BY resID DESC LIMIT 5")
         results = cursor.fetchall()
 
         # Display the results in the QLabel widgets
@@ -204,8 +215,6 @@ class ExamAdmin:
             cursor.execute('DELETE FROM resultsDetail')
             # Clear 'userResult' table
             cursor.execute('DELETE FROM userResult')
-            # Reset identity column in 'userResult' table
-            cursor.execute('DBCC CHECKIDENT (userResult, RESEED, 0)')
             conn.commit()
             conn.close()
             self.ui.result1displaylabel.setText("/")
@@ -257,7 +266,7 @@ class ExamAdmin:
                 FROM resultsDetail rd
                 INNER JOIN questions q ON rd.quesID = q.quesID
                 WHERE rd.resID = ?
-            """, resID)
+            """, (resID,))
 
             # Fetch all rows from the last executed statement
             results = cursor.fetchall()
@@ -358,11 +367,3 @@ def enableAnsButton(self):
     self.ui.ansBpushButton.setDisabled(False)
     self.ui.ansCpushButton.setDisabled(False)
     self.ui.ansDpushButton.setDisabled(False)
-
-
-def create_connection():
-    conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=HOANGNAM\\SQLEXPRESS;'
-                          'Database=QuestionBank;'
-                          'Trusted_Connection=yes;')
-    return conn
