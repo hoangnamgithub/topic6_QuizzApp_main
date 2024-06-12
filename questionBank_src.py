@@ -47,5 +47,3 @@ def createDatabase():
 
     # Close the connection
     conn.close()
-
-
