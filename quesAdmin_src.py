@@ -96,10 +96,11 @@ class QuestionAdmin:
             cursor = conn.cursor()
 
             # Delete the question from the 'resultsDetail' table
-            cursor.execute('DELETE FROM resultsDetail WHERE quesID = ?', quesID)
+            cursor.execute(
+                'DELETE FROM resultsDetail WHERE quesID = ?', (quesID,))
 
             # Delete the question from the 'questions' table
-            cursor.execute('DELETE FROM questions WHERE quesID = ?', quesID)
+            cursor.execute('DELETE FROM questions WHERE quesID = ?', (quesID,))
 
             conn.commit()
             conn.close()
@@ -157,6 +158,7 @@ class QuestionAdmin:
             dbToBinFIle()
             loadData(self.ui.tableWidget)
 
+
 def displayInFormulaBar(ui, row):
     ui.delQuesbutton.setDisabled(False)
     ui.IDtxtbox.setText(ui.tableWidget.item(row, 0).text())
@@ -167,6 +169,7 @@ def displayInFormulaBar(ui, row):
     ui.ansDtxtbox.setText(ui.tableWidget.item(row, 5).text())
     ui.corrAnstxtbox.setText(ui.tableWidget.item(row, 6).text())
     ui.delQuesbutton.setDisabled(False)
+
 
 def resetFormulaBar(ui):
     ui.IDtxtbox.setText("")
@@ -218,7 +221,8 @@ def BinFileTodb():
     # Insert the data back into the database
     for row in rows:
         quesID = row[0]
-        cursor.execute('SELECT quesID FROM questions WHERE quesID = ?', quesID)
+        cursor.execute(
+            'SELECT quesID FROM questions WHERE quesID = ?', (quesID,))
         if not cursor.fetchone():
             cursor.execute('''
             INSERT INTO questions (quesID, Question, AnswerA, AnswerB, AnswerC, AnswerD, CorrectAnswer)
