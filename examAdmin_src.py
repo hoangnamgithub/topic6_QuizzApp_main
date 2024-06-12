@@ -199,8 +199,10 @@ class ExamAdmin:
         if returnValue == QMessageBox.StandardButton.Yes:
             conn = create_connection()
             cursor = conn.cursor()
-            cursor.execute('DELETE FROM resultsDetail')  # Clear 'resultsDetail' table
-            cursor.execute('DELETE FROM userResult')  # Clear 'userResult' table
+            # Clear 'resultsDetail' table
+            cursor.execute('DELETE FROM resultsDetail')
+            # Clear 'userResult' table
+            cursor.execute('DELETE FROM userResult')
             conn.commit()
             conn.close()
             self.ui.result1displaylabel.setText("/")
@@ -232,7 +234,7 @@ class ExamAdmin:
 
         # Close the connection
         conn.close()
-        
+
     def displaySelectedResult(self):
         # Get the selected item from the QListWidget
         selected_item = self.ui.listExamWidget.currentItem()
@@ -243,10 +245,12 @@ class ExamAdmin:
             cursor = conn.cursor()
 
             # Get the resID for the selected result
-            cursor.execute("SELECT resID FROM userResult WHERE result = ?", selected_item.text())
+            cursor.execute(
+                "SELECT resID FROM userResult WHERE result = ?", selected_item.text())
             resID = cursor.fetchone()
             if resID is not None:
-                resID = resID[0]  # Get the first column of the first (and only) row
+                # Get the first column of the first (and only) row
+                resID = resID[0]
 
                 # Execute the query
                 cursor.execute("""
@@ -266,7 +270,8 @@ class ExamAdmin:
                 for row_number, row_data in enumerate(results):
                     self.ui.resultTableWidget.insertRow(row_number)
                     for column_number, data in enumerate(row_data):
-                        self.ui.resultTableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+                        self.ui.resultTableWidget.setItem(
+                            row_number, column_number, QTableWidgetItem(str(data)))
 
             # Close the connection
             conn.close()
@@ -293,10 +298,12 @@ class ExamAdmin:
         for row_number, row_data in enumerate(results):
             self.ui.resultTableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
-                self.ui.resultTableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+                self.ui.resultTableWidget.setItem(
+                    row_number, column_number, QTableWidgetItem(str(data)))
 
         # Close the connection
         conn.close()
+
 
 def cleanUpResultsDetail():
     conn = create_connection()
