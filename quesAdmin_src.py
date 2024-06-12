@@ -15,16 +15,15 @@ class QuestionAdmin:
         self.ui = ui
 
     def insertQues(self):
-        # Create a QMessageBox for confirmation
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
         msgBox.setText("Are you sure you want to add this question?")
         msgBox.setWindowTitle("Confirmation")
         msgBox.setStandardButtons(
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-
         # Show the message box and get the user's response
         returnValue = msgBox.exec()
+
         if returnValue == QMessageBox.StandardButton.Yes:
             # Get the text from the QLineEdit widgets
             quesID = self.ui.IDEditWidget.text()
@@ -33,24 +32,34 @@ class QuestionAdmin:
             ansB = self.ui.ansBEditWidget.text()
             ansC = self.ui.ansCEditWidget.text()
             ansD = self.ui.ansDEditWidget.text()
-
             # Get the current text from the QComboBox
             corrAns = self.ui.corrAnscomboBox.currentText()
 
             # Check if all QLineEdit widgets have been filled out
             if not all([quesID, question, ansA, ansB, ansC, ansD, corrAns]):
+
                 msgBox = QMessageBox()
                 msgBox.setIcon(QMessageBox.Icon.Warning)
                 msgBox.setText("Please fill out all fields before submitting.")
                 msgBox.setWindowTitle("Warning")
                 msgBox.exec()
                 return
+            # Check if quesID starts with 'Q' followed by a number
+            if not (quesID.startswith('Q') and quesID[1:].isdigit()):
 
+                msgBox = QMessageBox()
+                msgBox.setIcon(QMessageBox.Icon.Warning)
+                msgBox.setText(
+                    "Question ID must start with 'Q' followed by a number.")
+                msgBox.setWindowTitle("Warning")
+                msgBox.exec()
+                return
             conn = create_connection()
             cursor = conn.cursor()
 
             # Insert the new question into the database
             cursor.execute('''
+    
                 INSERT INTO questions (quesID, Question, AnswerA, AnswerB, AnswerC, AnswerD, CorrectAnswer)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             ''', (quesID, question, ansA, ansB, ansC, ansD, corrAns))
