@@ -3,12 +3,6 @@
 #  Class: 738657 - MI3310
 #  Project: Final Project - Topic 6
 
-import pyodbc
-import random
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
-
-
 import sqlite3
 import random
 from PyQt6.QtCore import QTimer
@@ -70,33 +64,6 @@ class ExamAdmin:
         self.ui.quesCountlabel.setText(
             f"{self.quesCount}/{self.ui.numofQuesInputbox.text().strip()}")
 
-    def insertQuesIDToDB(self, quesID):
-        conn = create_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO resultsDetail (quesID) VALUES (?)", (quesID,))
-        conn.commit()
-        conn.close()
-
-    def insertUserAnswerToDB(self, answer):
-        conn = create_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", (answer, self.curQues[0]))
-        conn.commit()
-        conn.close()
-
-    def saveDetailResultToDB(self):
-        conn = create_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT resID FROM userResult ORDER BY resID DESC LIMIT 1")
-        resID = cursor.fetchone()[0]
-        cursor.execute(
-            "UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", (resID,))
-        conn.commit()
-        conn.close()
-
     def checkCorrAns(self, answer):
         # Insert user's answer into 'urAns'
         self.insertUserAnswerToDB(answer)
@@ -127,10 +94,37 @@ class ExamAdmin:
             self.saveDetailResultToDB()
             self.displayResult()
             self.resetToInitialState()
-            self.displayResults()
+            self.displayResultsInList()
             self.displayAllResults()
             QMessageBox.information(
                 self.ui, "Quiz Finished", "You have answered all questions.")
+
+    def insertQuesIDToDB(self, quesID):
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO resultsDetail (quesID) VALUES (?)", (quesID,))
+        conn.commit()
+        conn.close()
+
+    def insertUserAnswerToDB(self, answer):
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE resultsDetail SET urAns = ? WHERE quesID = ?", (answer, self.curQues[0]))
+        conn.commit()
+        conn.close()
+
+    def saveDetailResultToDB(self):
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT resID FROM userResult ORDER BY resID DESC LIMIT 1")
+        resID = cursor.fetchone()[0]
+        cursor.execute(
+            "UPDATE resultsDetail SET resID = ? WHERE resID IS NULL", (resID,))
+        conn.commit()
+        conn.close()
 
     def checkTimeLeft(self):
         curValue = self.ui.progressBar.value()
@@ -145,7 +139,7 @@ class ExamAdmin:
             self.saveDetailResultToDB()
             self.displayResult()
             self.resetToInitialState()
-            self.displayResults()
+            self.displayResultsInList()
             self.displayAllResults()
             QMessageBox.information(self.ui, "Time's up!", "Time has ended.")
 
@@ -226,7 +220,7 @@ class ExamAdmin:
         self.displayAllResults()
         self.displayResult()
 
-    def displayResults(self):
+    def displayResultsInList(self):
         # Connect to the database
         conn = create_connection()
         cursor = conn.cursor()
@@ -248,7 +242,7 @@ class ExamAdmin:
         # Close the connection
         conn.close()
 
-    def displaySelectedResult(self):
+    def displaySelectedResultFromList(self):
         # Get the selected item from the QListWidget
         selected_item = self.ui.listExamWidget.currentItem()
 

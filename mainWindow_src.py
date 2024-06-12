@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         BinFileTodb()
         # load data from DB to QTableWidget
         loadData(self.ui.tableWidget)
-        self.examAdmin.displayResults()
+        self.examAdmin.displayResultsInList()
         self.examAdmin.displayResult()
         self.examAdmin.displayAllResults()
 
@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
         self.ui.reStartButton.clicked.connect(
             self.examAdmin.resetToInitialState)
         self.ui.listExamWidget.itemClicked.connect(
-            self.examAdmin.displaySelectedResult)
+            self.examAdmin.displaySelectedResultFromList)
         self.ui.resetBoard.clicked.connect(self.examAdmin.resetResultBoard)
         self.ui.startButton.clicked.connect(self.examAdmin.startQuiz)
         self.ui.listExamWidget.itemDoubleClicked.connect(self.deselectItem)
