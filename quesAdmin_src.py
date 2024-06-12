@@ -14,7 +14,7 @@ class QuestionAdmin:
     def __init__(self, ui):
         self.ui = ui
 
-    def insert_question(self):
+    def insertQues(self):
         # Create a QMessageBox for confirmation
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
@@ -77,7 +77,7 @@ class QuestionAdmin:
             self.ui.addQuesWidget_2.hide()
             dbToBinFIle()
 
-    def delete_question(self):
+    def delQues(self):
         # Create a QMessageBox
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)

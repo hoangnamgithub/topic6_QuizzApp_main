@@ -189,7 +189,7 @@ class ExamAdmin:
         )
         self.ui.progressBar.setValue(0)
 
-    def reset_board(self):
+    def resetResultBoard(self):
         msgBox = QMessageBox()
         msgBox.setIcon(QMessageBox.Icon.Question)
         msgBox.setText("Are you sure you want to reset the board?")
