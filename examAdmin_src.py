@@ -113,7 +113,7 @@ class ExamAdmin:
                 self.scoreTrack}/{self.ui.numofQuesInputbox.text().strip()}"
             self.ui.scoretlabel.setText(score_text)
             self.saveResultToDB()
-            self.saveDetailResultToDB()  # Insert 'resID' into 'resultsDetail'
+            self.saveDetailResultToDB()
             self.displayResult()
             self.resetToInitialState()
             self.displayResults()
@@ -131,6 +131,7 @@ class ExamAdmin:
                 self.scoreTrack}/{self.ui.numofQuesInputbox.text().strip()}"
             self.ui.scoretlabel.setText(score_text)
             self.saveResultToDB()
+            self.saveDetailResultToDB()
             self.displayResult()
             self.resetToInitialState()
             self.displayResults()
@@ -203,6 +204,8 @@ class ExamAdmin:
             cursor.execute('DELETE FROM resultsDetail')
             # Clear 'userResult' table
             cursor.execute('DELETE FROM userResult')
+            # Reset identity column in 'userResult' table
+            cursor.execute('DBCC CHECKIDENT (userResult, RESEED, 0)')
             conn.commit()
             conn.close()
             self.ui.result1displaylabel.setText("/")
@@ -220,7 +223,7 @@ class ExamAdmin:
         cursor = conn.cursor()
 
         # Execute the query
-        cursor.execute("SELECT result FROM userResult")
+        cursor.execute("SELECT resID, result FROM userResult")
 
         # Fetch all rows from the last executed statement
         results = cursor.fetchall()
@@ -230,7 +233,8 @@ class ExamAdmin:
 
         # Add items to the QListWidget
         for result in results:
-            self.ui.listExamWidget.addItem(str(result[0]))
+            item_text = f"{result[0]} - {result[1]}"
+            self.ui.listExamWidget.addItem(item_text)
 
         # Close the connection
         conn.close()
@@ -244,34 +248,29 @@ class ExamAdmin:
             conn = create_connection()
             cursor = conn.cursor()
 
-            # Get the resID for the selected result
-            cursor.execute(
-                "SELECT resID FROM userResult WHERE result = ?", selected_item.text())
-            resID = cursor.fetchone()
-            if resID is not None:
-                # Get the first column of the first (and only) row
-                resID = resID[0]
+            # Get the resID from the selected item's text
+            resID = selected_item.text().split(' - ')[0]
 
-                # Execute the query
-                cursor.execute("""
-                    SELECT q.quesID, rd.resID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
-                    FROM resultsDetail rd
-                    INNER JOIN questions q ON rd.quesID = q.quesID
-                    WHERE rd.resID = ?
-                """, resID)
+            # Execute the query
+            cursor.execute("""
+                SELECT q.quesID, rd.resID, q.CorrectAnswer, rd.urAns, q.Question, q.AnswerA, q.AnswerB, q.AnswerC, q.AnswerD
+                FROM resultsDetail rd
+                INNER JOIN questions q ON rd.quesID = q.quesID
+                WHERE rd.resID = ?
+            """, resID)
 
-                # Fetch all rows from the last executed statement
-                results = cursor.fetchall()
+            # Fetch all rows from the last executed statement
+            results = cursor.fetchall()
 
-                # Clear the QTableWidget
-                self.ui.resultTableWidget.setRowCount(0)
+            # Clear the QTableWidget
+            self.ui.resultTableWidget.setRowCount(0)
 
-                # Add items to the QTableWidget
-                for row_number, row_data in enumerate(results):
-                    self.ui.resultTableWidget.insertRow(row_number)
-                    for column_number, data in enumerate(row_data):
-                        self.ui.resultTableWidget.setItem(
-                            row_number, column_number, QTableWidgetItem(str(data)))
+            # Add items to the QTableWidget
+            for row_number, row_data in enumerate(results):
+                self.ui.resultTableWidget.insertRow(row_number)
+                for column_number, data in enumerate(row_data):
+                    self.ui.resultTableWidget.setItem(
+                        row_number, column_number, QTableWidgetItem(str(data)))
 
             # Close the connection
             conn.close()

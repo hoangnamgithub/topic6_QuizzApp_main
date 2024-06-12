@@ -61,7 +61,7 @@
      <string notr="true">background-color: rgb(194, 248, 255);</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="playTab">
      <property name="sizePolicy">
@@ -593,9 +593,9 @@ border-radius: 10px;</string>
       <widget class="QFrame" name="verticalFrame_10">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>100</x>
          <y>10</y>
-         <width>551</width>
+         <width>591</width>
          <height>261</height>
         </rect>
        </property>
@@ -688,9 +688,9 @@ border-radius: 10px;</string>
       <widget class="QFrame" name="frame">
        <property name="geometry">
         <rect>
-         <x>570</x>
+         <x>10</x>
          <y>10</y>
-         <width>111</width>
+         <width>91</width>
          <height>261</height>
         </rect>
        </property>
@@ -1899,10 +1899,10 @@ border-radius: 10px
        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
       </property>
       <property name="itemAlignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignJustify|Qt::AlignVCenter</set>
       </property>
       <property name="sortingEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <item>
        <property name="text">
