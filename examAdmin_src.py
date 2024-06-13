@@ -323,9 +323,7 @@ def chooseRandomQues():
     rows = cursor.fetchall()
     # Randomly select a question
     selectedQues = random.choice(rows)
-
     conn.close()
-
     return selectedQues
 
 
