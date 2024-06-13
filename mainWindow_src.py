@@ -3,7 +3,7 @@
 #  Class: 738657 - MI3310
 #  Project: Final Project - Topic 6
 
-#  This is TRYusingSQLite branch
+#  This is TRYusingSQLite branch hi it me
 import sys
 import pickle
 import random
