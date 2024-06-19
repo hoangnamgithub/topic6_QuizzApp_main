@@ -85,7 +85,7 @@ class QuestionAdmin:
             self.ui.IDEditWidget.setText("")
             self.ui.corrAnscomboBox.setCurrentIndex(0)
             self.ui.addQuesWidget_2.hide()
-            dbToBinFIle()
+            dbToBinFile()
 
 
     def delQues(self):
@@ -119,7 +119,7 @@ class QuestionAdmin:
             # Reload the QTableWidget
             ReloadQTableWidget(self.ui)
         loadData(self.ui.tableWidget)
-        dbToBinFIle()
+        dbToBinFile()
 
     def updateQues(self):
         # Create a QMessageBox
@@ -166,7 +166,7 @@ class QuestionAdmin:
 
             conn.commit()
             conn.close()
-            dbToBinFIle()
+            dbToBinFile()
             loadData(self.ui.tableWidget)
 
 
@@ -210,7 +210,7 @@ def loadData(table_widget):
     conn.close()
 
 
-def dbToBinFIle():
+def dbToBinFile():
     conn = create_connection()
     cursor = conn.cursor()
     # Execute the query

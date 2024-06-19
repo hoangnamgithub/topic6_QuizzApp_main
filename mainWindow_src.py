@@ -10,7 +10,7 @@ import random
 import sqlite3
 from questionBank_src import createDatabase
 from examAdmin_src import ExamAdmin
-from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFIle, loadData, displayInFormulaBar, resetFormulaBar
+from quesAdmin_src import QuestionAdmin, BinFileTodb, dbToBinFile, loadData, displayInFormulaBar, resetFormulaBar
 
 from PyQt6.QtWidgets import (
     QApplication,
