@@ -98,11 +98,11 @@ class MainWindow(QMainWindow):
 
     def deselectItem(self):
         self.ui.listExamWidget.clearSelection()
-        self.ui.resultTableWidget.setRowCount(0)  # Clear the QTableWidget
+        self.ui.resultTableWidget.setRowCount(0)
         self.examAdmin.displayAllResults()
 
     def deselectCell(self):
-        self.ui.tableWidget.clearSelection()  # Deselect all cells in the QTableWidget
+        self.ui.tableWidget.clearSelection() 
         self.ui.delQuesbutton.setDisabled(True)
         resetFormulaBar(self.ui)
 
