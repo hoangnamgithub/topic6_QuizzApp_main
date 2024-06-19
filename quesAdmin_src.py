@@ -87,7 +87,6 @@ class QuestionAdmin:
             self.ui.addQuesWidget_2.hide()
             dbToBinFile()
 
-
     def delQues(self):
         # Create a QMessageBox
         msgBox = QMessageBox()
